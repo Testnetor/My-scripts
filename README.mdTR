@@ -1,0 +1,37 @@
+# 🚀 Kripto Proje Scriptleri
+
+Bu depo, kripto node yönetimi, airdrop araştırmaları ve altyapı otomasyonu için geliştirdiğim kişisel script koleksiyonunu içermektedir.
+
+## ✅ İçerikler
+
+* Node kurulum scriptleri
+* Snapshot yedekleme ve geri yükleme scriptleri
+* Port kontrolü ve validator sağlık kontrolü scriptleri
+* Crontab temizlik otomasyonları
+* RPC ve log temizleme scriptleri
+* Airdrop uygunluk kontrolü için bot taslakları
+* Testnet ve mainnet hızlı kurulum scriptleri
+
+Tüm scriptler temiz, açıklamalı ve kendi sunucularınızda hızlı şekilde kullanılabilecek şekilde hazırlanmıştır.
+
+## 🎯 Amaç
+
+* Node ve validator yönetimindeki rutin işlemleri hızlandırmak
+* Yeni başlayanların testnet ve mainnet node kurulumlarını kolaylaştırmak
+* Tekrarlayan manuel işlemleri ortadan kaldırarak zaman kazandırmak
+
+## ⚠️ Sorumluluk Reddi
+
+Bu scriptler yalnızca kişisel test ortamlarında denenmiştir. Kullanımdan doğabilecek riskler kullanıcıya aittir. Mainnet ortamında çalıştırmadan önce kodları incelemeniz ve SSH anahtarları, kimlik bilgileri ile yapılandırmaları kendi ortamınıza göre düzenlemeniz önerilir.
+
+## 🤝 Katkıda Bulunma
+
+Topluluğun daha hızlı ve daha temiz kripto altyapıları kurmasına yardımcı olmak için yeni scriptlerinizi Pull Request (PR) ile paylaşabilirsiniz.
+
+## 📩 İletişim
+
+Sorularınız veya özel otomasyon ihtiyaçlarınız için Issue açabilir ya da Telegram üzerinden iletişime geçebilirsiniz.
+
+> 🛠️ “Bir kez script yaz, node'un sonsuza kadar çalışsın.”
+
+Görüşmek üzere.
