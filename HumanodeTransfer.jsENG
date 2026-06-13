@@ -1,0 +1,66 @@
+// Read mnemonics from TXT file
+const mnemonics = fs.readFileSync('mnemonics.txt', 'utf8')
+  .split('\n')
+  .map(line => line.trim())
+  .filter(Boolean);
+
+const recipient = ''; // Destination address
+const minimumBalance = BigInt(400_000_000_000); // Minimum balance to keep (0.4 HMND)
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function createApi() {
+  const wsProvider = new WsProvider('wss://explorer-rpc-ws.mainnet.stages.humanode.io');
+  const api = await ApiPromise.create({ provider: wsProvider });
+
+  wsProvider.on('disconnected', () => {
+    console.log(chalk.yellow('WebSocket connection closed. Exiting...'));
+    process.exit(0);
+  });
+
+  return api;
+}
+
+async function showSplashScreen() {
+  console.clear();
+
+  // Display banner
+  await sleep(2000);
+
+  console.log(chalk.blue.bold(humanodeText));
+  console.log(chalk.yellow.bold('Humanode Automation Tool'));
+}
+
+async function processAccounts() {
+  const api = await createApi();
+
+  for (let i = 0; i < mnemonics.length; i++) {
+    try {
+      if (i > 0) await sleep(1000);
+
+      const mnemonic = mnemonics[i];
+      const keyring = new Keyring({ type: 'sr25519' });
+      const account = keyring.addFromMnemonic(mnemonic);
+
+      const { data: balance } = await api.query.system.account(account.address);
+      const availableBalance = balance.free.toBigInt();
+
+      console.log(
+        chalk.green(
+          `Account checked: ${account.address} | Balance: ${availableBalance}`
+        )
+      );
+
+    } catch (error) {
+      console.error(
+        chalk.red(`Error processing account: ${error.message}`)
+      );
+    }
+  }
+
+  await api.disconnect();
+  console.log(chalk.green('All accounts processed successfully.'));
+  process.exit(0);
+}
