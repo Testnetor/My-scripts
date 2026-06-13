@@ -73,12 +73,12 @@ async function sendTransaction() {
         console.log(chalk.red(`â›” Yetersiz bakiye (sadece 0.4 bÄ±rakÄ±lacak kadar yok): ${sender.address}`));
       }
     } catch (error) {
-      console.error(chalk.red(`í ½í²¥ Hata (${mnemonics[i]}): ${error.message}`));
+      console.error(chalk.red(`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Hata (${mnemonics[i]}): ${error.message}`));
     }
   }
 
   await api.disconnect();
-  console.log(chalk.green('í ¼í¾‰ TÃ¼m iÅŸlemler tamamlandÄ±.'));
+  console.log(chalk.green('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ TÃ¼m iÅŸlemler tamamlandÄ±.'));
   process.exit(0);
 }
 
