@@ -1,0 +1,104 @@
+from substrateinterface import Keypair
+import os
+import csv
+
+GREEN = '\033[92m'
+RED = '\033[91m'
+RESET = '\033[0m'
+BOLD = '\033[1m'
+YELLOW = '\033[93m'
+BLUE = '\033[94m'
+
+def mnemonic_to_address(mnemonic):
+    kp = Keypair.create_from_mnemonic(mnemonic, ss58_format=5234)
+    return kp.ss58_address
+
+def get_reward_info(address, reward_file='list.csv'):
+    try:
+        with open(reward_file, mode='r', newline='', encoding='utf-8') as csvfile:
+            reader = csv.reader(csvfile, delimiter='\t')
+            for row in reader:
+                if len(row) == 2:
+                    addr, reward = row
+                    if addr.strip() == address.strip():
+                        return reward.strip()
+    except Exception as e:
+        print(f"{RED}CSV read error:{RESET} {e}")
+    return None
+
+def remove_colors(text):
+    return text.replace(GREEN, '').replace(RED, '').replace(RESET, '').replace(BOLD, '').replace(YELLOW, '').replace(BLUE, '')
+
+def main():
+    if os.path.exists('rewards_list.txt'):
+        os.remove('rewards_list.txt')
+
+    total_reward = 0
+    reward_results = []
+    no_reward_found_list = []
+    full_reward_wallets = 0
+    partial_reward_wallets = 0
+    no_reward_found = 0
+
+    with open('mnemonic.txt', 'r') as f:
+        mnemonics = [line.strip() for line in f if line.strip()]
+
+    with open('names.txt', 'r') as f:
+        names = [line.strip() for line in f if line.strip()]
+
+    for mnemonic, name in zip(mnemonics, names):
+        address = mnemonic_to_address(mnemonic)
+        reward = get_reward_info(address)
+
+        if reward is not None:
+            reward_float = float(reward)
+            total_reward += reward_float
+
+            if reward_float >= 400:
+                full_reward_wallets += 1
+                color = BLUE
+            elif 150 <= reward_float < 400:
+                partial_reward_wallets += 1
+                color = GREEN
+            elif reward_float == 0:
+                color = YELLOW
+                no_reward_found += 1
+            else:
+                color = RESET
+
+            line = f"Name: {name} | Address: {address} | Reward: {reward} HMND"
+            reward_results.append((reward_float, color + line + RESET))
+
+        else:
+            no_reward_found += 1
+            line = RED + f"Name: {name} | Address: {address} | Reward: Not Found" + RESET
+            no_reward_found_list.append((0, line))
+
+    reward_results.sort(reverse=True, key=lambda x: x[0])
+
+    with open('rewards_list.txt', 'w', encoding='utf-8') as f:
+        for _, line in reward_results:
+            print(line)
+            f.write(remove_colors(line) + '\n')
+
+        for _, line in no_reward_found_list:
+            print(line)
+            f.write(remove_colors(line) + '\n')
+
+        f.write(f"\nTOTAL HMND AMOUNT : {round(total_reward, 2)}\n")
+        f.write(f"FULL REWARD WALLETS (~469): {full_reward_wallets}\n")
+        f.write(f"PARTIAL REWARD WALLETS (~225): {partial_reward_wallets}\n")
+        f.write(f"NO REWARD WALLETS (0 or not found): {no_reward_found}\n")
+
+    summary = (
+        f"\n\nCongratulations! Wishing you abundance and success.\n\n"
+        f"TOTAL HMND AMOUNT : {round(total_reward, 2)}\n"
+        f"FULL REWARD WALLETS (~469): {full_reward_wallets}\n"
+        f"PARTIAL REWARD WALLETS (~225): {partial_reward_wallets}\n"
+        f"NO REWARD WALLETS (0 or not found): {no_reward_found}\n"
+    )
+
+    print(BOLD + summary + RESET)
+
+if __name__ == '__main__':
+    main()
